@@ -19,7 +19,7 @@ For each launching flow:
 1. Ask the developer how to trigger the flow in their app (an API route, a CLI command, a test, a job), and use that. The point is to exercise **their** code, not to call VelaFi directly from the review. Calling VelaFi directly is only for setup and checking results (funding a test merchant, reading a record).
 2. Fund the test merchant if the flow needs it, with the simulators on https://docs.velafi.com/docs/sandbox.md#sandbox-testing-tools:
    - Fiat: `POST /v2/platform/test/deposit` (pass `depositAlias` to credit a virtual account; up to 100,000 per deposit).
-   - Crypto: `POST /v2/platform/test/crypto/deposit` (`USDT` or `USDC`).
+   - Crypto: `POST /v2/platform/test/crypto/deposit` (`USDT` or `USDC`; up to 10,000 per deposit).
    If a simulator returns `Request rejected`, test deposits are not enabled for this sandbox account. Ask the developer to contact VelaFi (contact@velafi.com) to enable them, and mark the funded flows "not run" for now.
 3. Trigger the flow and record each ID (`clientId`, `orderId`, `txId`, `userPaymentId`, `merchantId`).
 4. Poll the record until it is final or the wait below has passed. Webhooks are not sent in the sandbox, so poll and use the webhook self-test for the handler.
