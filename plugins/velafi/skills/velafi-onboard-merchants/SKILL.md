@@ -33,7 +33,7 @@ POST /v2/merchants -> customer completes kycLink -> GET /v2/merchants (status=-1
 
 ## Before you start
 
-**Ask first, then build.** Before you write or change any code, ask the developer the questions in this section and wait for their answers. Ask them together in one message. If the developer's request already answers a question, state your understanding in one line and ask them to confirm it instead of asking again. Do not assume a country, currency, channel, merchant ID, amount mode or environment. Only skip a question the developer explicitly tells you to skip, and say which default you are using.
+**Ask first, then build.** Before you write or change any code, ask the developer the questions in this section and wait for their answers. If you have a tool for asking the developer multiple-choice questions, use it for questions with a few clear choices, such as environment, corridor, amount mode or funding crypto, and ask them in rounds if there are more than the tool takes at once. Ask open questions, such as merchant IDs, IP addresses or file paths, as text. Without such a tool, ask all the questions together in one message. If the developer's request already answers a question, state your understanding in one line and ask them to confirm it instead of asking again. Do not assume a country, currency, channel, merchant ID, amount mode or environment. Only skip a question the developer explicitly tells you to skip, and say which default you are using.
 
 Ask the developer:
 

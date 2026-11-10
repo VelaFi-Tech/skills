@@ -27,7 +27,7 @@ Source checklist: https://docs.velafi.com/docs/use-cases/go-live-checklist.md. M
 
 ## Before you start
 
-**Ask first, then review.** Before you start the review, ask the developer the questions in this section and wait for their answers. Ask them together in one message. If the request already answers a question, state your understanding in one line and ask them to confirm it.
+**Ask first, then review.** Before you start the review, ask the developer the questions in this section and wait for their answers. If you have a tool for asking the developer multiple-choice questions, use it for questions with a few clear choices, such as environment, corridor, amount mode or funding crypto, and ask them in rounds if there are more than the tool takes at once. Ask open questions, such as merchant IDs, IP addresses or file paths, as text. Without such a tool, ask all the questions together in one message. If the request already answers a question, state your understanding in one line and ask them to confirm it.
 
 Ask the developer:
 
