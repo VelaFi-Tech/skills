@@ -1,6 +1,6 @@
 ---
 name: velafi-go-live-check
-description: Review a VelaFi integration before production and produce a pass/fail go-live report. Walks the VelaFi go-live checklist and each use-case checklist (collections, payouts, on-ramp, off-ramp, onboarding, global payments), greps the codebase for risky patterns (hardcoded keys, secrets in logs, wrong webhook acknowledgement, missing signature verification, static or reused clientId, retries without a lookup, status handling that ignores 80/81, no IP whitelist note), and runs the sandbox token check and the local webhook self-test. Never calls production. Use when the developer asks "are we ready to go live", before switching to https://api.velafi.com, or for a VelaFi integration review.
+description: Review a VelaFi integration before production and produce a pass/fail go-live report. Walks the VelaFi go-live checklist and each use-case checklist (collections, payouts, on-ramp, off-ramp, onboarding, global payments), greps the codebase for risky patterns (hardcoded keys, secrets in logs, wrong webhook acknowledgement, missing signature verification, static or reused clientId, retries without a lookup, status handling that ignores 80/81, no IP whitelist note), traces each launching flow step by step through the code (call order, request fields, response handling, status-to-state mapping, ledger movements), runs the sandbox token check and the local webhook self-test, and optionally runs each flow end to end in the sandbox. Never calls production. Use when the developer asks "are we ready to go live", before switching to https://api.velafi.com, or for a VelaFi integration review.
 license: Apache-2.0
 ---
 
@@ -8,7 +8,7 @@ license: Apache-2.0
 
 ## Overview
 
-A read-only review the agent runs over the developer's VelaFi integration before it moves from the sandbox to production. It produces a report with PASS / FAIL / WARN / N/A per item, file:line evidence, and the fix with a doc link. It does not change code unless the developer asks afterwards.
+A review the agent runs over the developer's VelaFi integration before it goes to production. It checks two things: that the integration is safe (credentials, webhooks, idempotency, errors) and that each flow is built correctly from the first call to the final state in the developer's system. It reads the code and never changes it. The only calls it makes are to the sandbox, and only with the developer's OK. It produces a report with PASS / FAIL / WARN / N/A per item, file:line evidence, and the fix with a doc link. It does not change code unless the developer asks afterwards.
 
 It relies on the sibling skills:
 
@@ -37,6 +37,7 @@ Ask the developer:
 4. Whether sandbox credentials are available as `VELAFI_API_KEY` / `VELAFI_API_SECRET` in the shell (for the token check).
 5. Whether the webhook handler can run locally (for the self-test), and how to set its verification key in dev.
 6. The production servers' public egress IPs and where they are documented.
+7. Whether they want the optional sandbox run (step 6): their own code runs each launching flow against the sandbox. Skip it if they do not develop against the sandbox.
 
 ## Workflow
 
@@ -96,7 +97,13 @@ Evaluate every item in the shared checklist below, then the per-flow checklist i
 
 **Monitoring** — requests logged with `clientId` and VelaFi IDs; alerts on token failures, webhook silence or non-acknowledgement, error-rate spikes, outcome-unknown codes, stuck records, and low balances.
 
-### 4. Run the scripts (sandbox and local only)
+### 4. Trace each flow end to end
+
+For every launching flow, follow `references/flow-trace.md`: take the flow skill's Workflow steps as the expected sequence, find each step in the code, and check the call order, the request fields against the API reference, the response handling, the mapping of every status to a state in the developer's system, and the ledger movements. Report one table per flow. Any FAIL in a flow trace is blocking.
+
+This is what shows whether the integration is correct, not only safe. A flow can pass every checklist item and still send the wrong `paymentId`, read the wrong field, or never record the final status.
+
+### 5. Run the scripts (sandbox and local only)
 
 Run these from the root of the developer's repository, using the full path to each script inside the installed skills (the `velafi-api-setup` and `velafi-webhooks` folders next to this skill). Keep the test key out of version control:
 
@@ -117,7 +124,11 @@ Run these from the root of the developer's repository, using the full path to ea
 
    The developer configures the printed test public key temporarily in dev. Do not use `--allow-remote` against anything but an environment the developer owns. Record each PASS/FAIL line. Remind the developer to restore the real key and git-ignore the key file.
 
-### 5. Write the report
+### 6. Optional: run each flow in the sandbox
+
+Only if the developer said yes in "Before you start". Follow `references/sandbox-run.md`: trigger each launching flow through the developer's own code against `https://api-test.velafi.com`, fund test merchants with the simulators, poll to a final status, check the developer's system and ledger, and test one duplicate `clientId` per create call. A flow the sandbox cannot finish is NOT PROVABLE IN SANDBOX, not a FAIL; its flow trace stays the evidence. If the developer skips this step, mark it "not run" and rely on the flow trace.
+
+### 7. Write the report
 
 Use this structure:
 
@@ -127,6 +138,13 @@ Use this structure:
 Verdict: NOT READY | READY WITH WARNINGS | READY
 Flows reviewed: ...   Event types: ...
 Scripts: check_token.py <PASS/FAIL/not run> · check_webhook_endpoint.py <PASS/FAIL/not run>
+Sandbox run: <done / not run>
+
+## Flow traces
+(one table per flow, from references/flow-trace.md)
+
+## Sandbox runs
+(one block per flow, from references/sandbox-run.md, or "not run")
 
 ## Blocking (FAIL)
 | # | Item | Evidence | Fix | Doc |
@@ -141,13 +159,15 @@ Scripts: check_token.py <PASS/FAIL/not run> · check_webhook_endpoint.py <PASS/F
 - item — reason
 ```
 
-Verdict rules: any FAIL → NOT READY. No FAIL but any WARN → READY WITH WARNINGS. Always FAIL: hardcoded or committed secrets, secrets in logs, VelaFi called from client code, missing signature verification, wrong acknowledgement body, create-call retries without a `clientId` lookup, no reconciliation for webhook-driven flows, polling logic that treats `80`/`81` as non-final.
+Verdict rules: any FAIL → NOT READY. No FAIL but any WARN → READY WITH WARNINGS. Always FAIL: hardcoded or committed secrets, secrets in logs, VelaFi called from client code, missing signature verification, wrong acknowledgement body, create-call retries without a `clientId` lookup, no reconciliation for webhook-driven flows, polling logic that treats `80`/`81` as non-final, a flow step the flow needs that is missing or wrong, and a sandbox run that failed because of the developer's code. A sandbox run marked "not run" or NOT PROVABLE IN SANDBOX is never a FAIL on its own.
+
+State in the report that it reviews the developer's side only: it cannot check VelaFi's side (production IP whitelist, production webhooks, limits, channel setup).
 
 End with the offer to fix the FAIL items, one at a time, and the reminder that webhooks do not fire in the sandbox, so the first real deliveries arrive in production: start with low-value transactions after the developer approves.
 
 ## Rules
 
-- Read-only review; never call production; never register or change webhooks.
+- Never change the developer's code during the review; never call production; never register or change webhooks. Call the sandbox only in the optional sandbox run, with the developer's OK.
 - Evidence or it is not a PASS.
 - Mask any secret found; recommend rotating any key that was ever committed.
 - Do not claim the integration is ready if any blocking item fails or the scripts could not run and nothing else covers those items.
