@@ -43,19 +43,11 @@ Wait up to 15 minutes for a record to become final. Sandbox behaviour can change
 
 ## How to report it
 
-Add to the report, per flow:
+Add one card per flow to the report's Sandbox run section (`report-template.html`) with: how it was triggered, the IDs (`clientId`, `orderId` or `txId`), the final status and how long it took, the state and ledger change in the developer's system, how a duplicate `clientId` was handled, and the result:
 
-```markdown
-### Sandbox run: <flow>
-Triggered by: <route / command>   IDs: <clientId, orderId or txId>
-Final status: <status> after <minutes>   Your system: <state, ledger change>
-Duplicate clientId: <rejected and looked up / not handled>
-Result: 🟢 PASS | 🔴 FAIL | 🔵 NOT PROVABLE IN SANDBOX | ⚪ not run
-```
-
-- 🟢 **PASS**: the flow reached a final status and the developer's system matched it.
-- 🔴 **FAIL**: the developer's code caused the problem: a request rejected with an error code, a status the code mishandled, a wrong ledger movement, or a duplicate `clientId` that was not handled. Every FAIL here is blocking.
-- 🔵 **NOT PROVABLE IN SANDBOX**: the sandbox could not take the flow to a final state for reasons outside the developer's code (see the table). This is not a FAIL. The flow trace stays the evidence for that flow.
-- ⚪ **not run**: the developer chose to skip it, or it could not run safely.
+- **PASS**: the flow reached a final status and the developer's system matched it.
+- **FAIL**: the developer's code caused the problem: a request rejected with an error code, a status the code mishandled, a wrong ledger movement, or a duplicate `clientId` that was not handled. Every FAIL here is blocking.
+- **NOT PROVABLE IN SANDBOX**: the sandbox could not take the flow to a final state for reasons outside the developer's code (see the table). This is not a FAIL. The flow trace stays the evidence for that flow.
+- **not run**: the developer chose to skip it, or it could not run safely.
 
 A sandbox run never proves VelaFi's side of the integration (production whitelist, production webhooks, limits, channel setup). Say so in the report.

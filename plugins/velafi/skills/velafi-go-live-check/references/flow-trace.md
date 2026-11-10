@@ -12,16 +12,9 @@ The checklists confirm that the important pieces exist. The flow trace confirms 
    - **Response.** The code checks `code` before reading `data`, reads the fields it needs (for example `orderId`, `txId`, `userPaymentId`, `merchantId`, `fieldList`), and stores the VelaFi ID next to the developer's own ID and `clientId`.
    - **State.** Every possible status of the record maps to a state in the developer's system, including the failure and reversal statuses listed in the flow skill. Note any status that falls through, is ignored, or maps to the wrong state.
    - **Money.** The developer's ledger is credited or debited at the right status, once, and reversed when the flow says it must be (for example `72` after `60`, `WITHDRAW` status `3` or `4`, `WITHDRAW_ROLLBACK`).
-4. Mark each step 🟢 PASS, 🔴 FAIL or 🟡 WARN with evidence (⚪ N/A for an optional step the developer does not use). A step that cannot be found in the code is FAIL if the flow needs it, and N/A if it is optional and the developer confirms they do not use it.
+4. Mark each step PASS, FAIL or WARN with evidence. A step that cannot be found in the code is FAIL if the flow needs it, and N/A if it is optional and the developer confirms they do not use it.
 
-Report one table per flow:
-
-```markdown
-### Flow trace: <flow>
-🔴 <n> FAIL · 🟡 <n> WARN · 🟢 <n> PASS
-
-| # | Step | Code | Request | Response | State and money | Result |
-```
+Report one table per flow in the report's Flow trace section (`report-template.html`): step, file:line, what you checked (request, response handling, state and money) and the result, with a tally of FAIL, WARN, PASS and N/A for the flow.
 
 Any FAIL in a flow trace is a blocking item.
 
