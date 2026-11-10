@@ -27,6 +27,8 @@ Source checklist: https://docs.velafi.com/docs/use-cases/go-live-checklist.md. M
 
 ## Before you start
 
+**Ask first, then review.** Before you start the review, ask the developer the questions in this section and wait for their answers. Ask them together in one message. If the request already answers a question, state your understanding in one line and ask them to confirm it.
+
 Ask the developer:
 
 1. Which flows are launching: collect with virtual accounts, payouts from balance, convert to stablecoins (on-ramp, prefunded or pay-per-order), payouts funded by stablecoins (off-ramp), onboard customers (sub-merchants), global payments (fiat-to-fiat), crypto withdrawals, stablecoin payments.

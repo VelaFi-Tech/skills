@@ -20,6 +20,8 @@ It is the entry point for the other VelaFi skills. Build this first, then:
 
 ## Before you start
 
+**Ask first, then build.** Before you write or change any code, ask the developer the questions in this section and wait for their answers. Ask them together in one message. If the developer's request already answers a question, state your understanding in one line and ask them to confirm it instead of asking again. Do not assume a country, currency, channel, merchant ID, amount mode or environment. Only skip a question the developer explicitly tells you to skip, and say which default you are using.
+
 Ask the developer:
 
 1. **Which environment do you have credentials for?** Sandbox keys come from VelaFi (contact@velafi.com) and only work on `https://api-test.velafi.com`. Production keys are created on the **API Management** page of the dashboard and only work on `https://api.velafi.com`. The two sets are not interchangeable.

@@ -25,6 +25,8 @@ Main doc: https://docs.velafi.com/docs/use-cases/payouts-funded-by-stablecoins.m
 
 ## Before you start
 
+**Ask first, then build.** Before you write or change any code, ask the developer the questions in this section and wait for their answers. Ask them together in one message. If the developer's request already answers a question, state your understanding in one line and ask them to confirm it instead of asking again. Do not assume a country, currency, channel, merchant ID, amount mode or environment. Only skip a question the developer explicitly tells you to skip, and say which default you are using.
+
 Prerequisites:
 
 - API access works (`velafi-api-setup`).
