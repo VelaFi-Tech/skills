@@ -130,34 +130,56 @@ Only if the developer said yes in "Before you start". Follow `references/sandbox
 
 ### 7. Write the report
 
+Write the report to `GO_LIVE_REPORT.md` in the project root and show it to the developer. Make the results easy to scan:
+
+- Put a status marker before every result word, everywhere in the report: 🟢 PASS, 🟡 WARN, 🔴 FAIL, ⚪ N/A or not run, 🔵 NOT PROVABLE IN SANDBOX. Keep the word next to the marker, so the report still reads correctly where emoji or colours do not show.
+- Open with the verdict in a GitHub alert box, which renders in colour on GitHub and in many Markdown viewers: `[!CAUTION]` for NOT READY, `[!WARNING]` for READY WITH WARNINGS, `[!TIP]` for READY. Add one line saying why.
+- Follow with a scorecard that counts the items in the Blocking, Warnings, Passed and Not applicable sections.
+- Start each flow trace with a one-line summary of its results.
+
 Use this structure:
 
 ```markdown
 # VelaFi go-live report — <project> — <date>
 
-Verdict: NOT READY | READY WITH WARNINGS | READY
-Flows reviewed: ...   Event types: ...
-Scripts: check_token.py <PASS/FAIL/not run> · check_webhook_endpoint.py <PASS/FAIL/not run>
-Sandbox run: <done / not run>
+> [!CAUTION]
+> **Verdict: 🔴 NOT READY.** <one line: what blocks go-live>
+
+| 🔴 FAIL | 🟡 WARN | 🟢 PASS | ⚪ N/A |
+| :---: | :---: | :---: | :---: |
+| <n> | <n> | <n> | <n> |
+
+| | |
+| --- | --- |
+| Flows reviewed | ... |
+| Event types | ... |
+| Scripts | `check_token.py` 🟢 PASS · `check_webhook_endpoint.py` ⚪ not run |
+| Sandbox run | 🟢 done / ⚪ not run |
+
+This review covers the developer's side only. ...
 
 ## Flow traces
-(one table per flow, from references/flow-trace.md)
+### Flow trace: <flow>
+🔴 1 FAIL · 🟡 2 WARN · 🟢 3 PASS
+(table from references/flow-trace.md, with a marker in the Result column)
 
 ## Sandbox runs
-(one block per flow, from references/sandbox-run.md, or "not run")
+(one block per flow, from references/sandbox-run.md, or "⚪ not run")
 
-## Blocking (FAIL)
+## 🔴 Blocking (FAIL)
 | # | Item | Evidence | Fix | Doc |
 
-## Warnings (WARN)
+## 🟡 Warnings (WARN)
 | # | Item | Evidence | Fix | Doc |
 
-## Passed
-- item — evidence
+## 🟢 Passed
+- 🟢 item — evidence
 
-## Not applicable / not run
-- item — reason
+## ⚪ Not applicable / not run
+- ⚪ item — reason
 ```
+
+Use `[!WARNING]` with "🟡 READY WITH WARNINGS" or `[!TIP]` with "🟢 READY" for the other verdicts.
 
 Verdict rules: any FAIL → NOT READY. No FAIL but any WARN → READY WITH WARNINGS. Always FAIL: hardcoded or committed secrets, secrets in logs, VelaFi called from client code, missing signature verification, wrong acknowledgement body, create-call retries without a `clientId` lookup, no reconciliation for webhook-driven flows, polling logic that treats `80`/`81` as non-final, a flow step the flow needs that is missing or wrong, and a sandbox run that failed because of the developer's code. A sandbox run marked "not run" or NOT PROVABLE IN SANDBOX is never a FAIL on its own.
 
