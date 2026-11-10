@@ -24,7 +24,7 @@ claude plugin install velafi-skills@velafi
 
 **Claude desktop app**
 
-The `/plugin` commands do not work in the desktop app. Open **Customize** → **Plugins**, click **Add**, choose **Add marketplace**, select the GitHub repository option and enter `VelaFi-Tech/skills`. Then install **velafi-skills** from the VelaFi marketplace. Menu names can differ slightly between app versions; if the option is missing, install from the CLI instead.
+The `/plugin` commands do not work in the desktop app. Open **Customize** → **Plugins**, click **Add**, choose **Add marketplace**, and paste the repository URL `https://github.com/VelaFi-Tech/skills`. Then install **velafi-skills** from the VelaFi marketplace. Menu names can differ slightly between app versions; if the option is missing, install from the CLI instead.
 
 The plugin also connects the [VelaFi docs MCP server](https://docs.velafi.com/docs/developer-tools/build-with-ai) (`https://docs.velafi.com/mcp`), so the agent can look up any page while it works.
 
@@ -43,7 +43,9 @@ The plugin installs all VelaFi skills and connects the docs MCP server.
 npx skills add VelaFi-Tech/skills
 ```
 
-Update later with `/plugin marketplace update` (Claude Code), `codex plugin marketplace upgrade` (Codex) or `npx skills update`.
+Update later with `/plugin marketplace update` (Claude Code), `codex plugin marketplace upgrade` (Codex) or `npx skills update`. In Claude Code you can also turn on auto-update for the VelaFi marketplace: open `/plugin` and go to **Marketplaces**.
+
+Before it writes any code, the agent asks a few setup questions, such as the country and currency, your merchant IDs and the environment. Answer them, or tell it which ones to skip.
 
 ## Skills
 
