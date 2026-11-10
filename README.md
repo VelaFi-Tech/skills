@@ -6,12 +6,25 @@ Each skill is a folder with a `SKILL.md` (instructions the agent follows) and, w
 
 ## Install
 
-**Claude Code**
+**Claude Code CLI**
+
+In a Claude Code session in your terminal:
 
 ```
 /plugin marketplace add VelaFi-Tech/skills
 /plugin install velafi-skills@velafi
 ```
+
+Or from your shell:
+
+```bash
+claude plugin marketplace add VelaFi-Tech/skills
+claude plugin install velafi-skills@velafi
+```
+
+**Claude desktop app**
+
+The `/plugin` commands do not work in the desktop app. Open **Customize** → **Plugins**, click **Add**, choose **Add marketplace**, select the GitHub repository option and enter `VelaFi-Tech/skills`. Then install **velafi-skills** from the VelaFi marketplace. Menu names can differ slightly between app versions; if the option is missing, install from the CLI instead.
 
 The plugin also connects the [VelaFi docs MCP server](https://docs.velafi.com/docs/developer-tools/build-with-ai) (`https://docs.velafi.com/mcp`), so the agent can look up any page while it works.
 
