@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "velafi-docs": {
+      "type": "http",
+      "url": "https://docs.velafi.com/mcp"
+    }
+  }
+}

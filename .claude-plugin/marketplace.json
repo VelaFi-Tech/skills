@@ -1,0 +1,18 @@
+{
+  "name": "velafi",
+  "owner": {
+    "name": "VelaFi",
+    "url": "https://docs.velafi.com"
+  },
+  "metadata": {
+    "description": "Agent skills for integrating the VelaFi API: crypto-fiat on/off-ramps, local collections and payouts, cross-border payments.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "velafi-skills",
+      "source": "./plugins/velafi",
+      "description": "Skills that guide AI coding agents through VelaFi API integrations, with local self-checks."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "velafi-skills",
+  "version": "1.0.0",
+  "description": "Skills that guide AI coding agents through VelaFi API integrations: authentication, webhooks, collections, payouts, on/off-ramps, crypto wallet, global payments and a go-live check.",
+  "author": {
+    "name": "VelaFi",
+    "url": "https://docs.velafi.com"
+  },
+  "homepage": "https://docs.velafi.com/docs/developer-tools/agent-skills",
+  "repository": "https://github.com/VelaFi-Tech/skills",
+  "license": "Apache-2.0",
+  "keywords": ["velafi", "payments", "stablecoins", "on-ramp", "off-ramp", "api"]
+}
