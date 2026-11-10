@@ -28,13 +28,22 @@ The `/plugin` commands do not work in the desktop app. Open **Customize** → **
 
 The plugin also connects the [VelaFi docs MCP server](https://docs.velafi.com/docs/developer-tools/build-with-ai) (`https://docs.velafi.com/mcp`), so the agent can look up any page while it works.
 
-**Other agents** (Codex, Cursor, Windsurf and others supported by the [skills CLI](https://github.com/vercel-labs/skills))
+**Codex**
+
+```bash
+codex plugin marketplace add VelaFi-Tech/skills
+codex plugin add velafi-skills@velafi
+```
+
+The plugin installs all VelaFi skills and connects the docs MCP server.
+
+**Other agents** (Cursor, Windsurf and others supported by the [skills CLI](https://github.com/vercel-labs/skills))
 
 ```
 npx skills add VelaFi-Tech/skills
 ```
 
-Update later with `/plugin marketplace update` (Claude Code) or `npx skills update`.
+Update later with `/plugin marketplace update` (Claude Code), `codex plugin marketplace upgrade` (Codex) or `npx skills update`.
 
 ## Skills
 
