@@ -1,13 +1,16 @@
+# Go-live report template
+
+The go-live report is one self-contained HTML file, `go-live-report.html`, in the root of the developer's project. Build it from the template below:
+
+1. Write the HTML in the code block below to `go-live-report.html` and replace every `{{PLACEHOLDER}}`.
+2. Repeat the blocks marked `REPEAT` once per item, and delete the example rows.
+3. Keep the structure and styles. Do not add external fonts, scripts, images or links other than docs.velafi.com.
+4. HTML-escape everything you insert (`&`, `<`, `>`, `"`, `'`), especially code snippets and error messages.
+5. Never insert secrets, tokens, full account numbers or customer personal data.
+6. Status classes: `fail`, `warn`, `pass`, `na`, `np` (NOT PROVABLE IN SANDBOX). Always keep the word inside the pill.
+
+```html
 <!doctype html>
-<!--
-  VelaFi go-live report template.
-  Copy this file to go-live-report.html in the project root and replace every {{PLACEHOLDER}}.
-  Repeat the blocks marked REPEAT once per item, and delete the example rows.
-  Keep the file self-contained: no external fonts, scripts, images or links other than docs.velafi.com.
-  HTML-escape everything you insert (& < > " '), especially code snippets and error messages.
-  Never insert secrets, tokens, full account numbers or customer personal data.
-  Status classes: fail, warn, pass, na, np (NOT PROVABLE IN SANDBOX). Always keep the word inside the pill.
--->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -162,10 +165,10 @@ ul.plain li { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; 
   </section>
 
   <section>
-    <div class="head"><span class="eyebrow">Scripts</span><h2>Self-checks</h2></div>
+    <div class="head"><span class="eyebrow">Checks</span><h2>Self-checks</h2></div>
     <ul class="plain">
-      <li><span class="pill pass">PASS</span><span><code>check_token.py</code> (sandbox): {{RESULT LINE}}</span></li>
-      <li><span class="pill na">NOT RUN</span><span><code>check_webhook_endpoint.py</code>: {{RESULT OR REASON}}</span></li>
+      <li><span class="pill pass">PASS</span><span>Credential check (sandbox): {{RESULT LINE}}</span></li>
+      <li><span class="pill na">NOT RUN</span><span>Webhook endpoint self-test: {{RESULT OR REASON}}</span></li>
     </ul>
   </section>
 
@@ -259,3 +262,4 @@ ul.plain li { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; 
 </div>
 </body>
 </html>
+```

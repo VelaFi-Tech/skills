@@ -8,7 +8,7 @@ license: Apache-2.0
 
 ## Overview
 
-VelaFi pushes status changes to your server as signed HTTP POSTs. This skill builds one receiver that verifies every delivery, acknowledges it in the exact format VelaFi expects, stores it, and processes it asynchronously and idempotently. It also ships a local self-test, `scripts/check_webhook_endpoint.py`.
+VelaFi pushes status changes to your server as signed HTTP POSTs. This skill builds one receiver that verifies every delivery, acknowledges it in the exact format VelaFi expects, stores it, and processes it asynchronously and idempotently. It also describes a local self-test for the handler, in `references/endpoint-self-test.md`.
 
 Related skills:
 
@@ -16,7 +16,7 @@ Related skills:
 - The flow skills decide which events matter and what to do with each status: `velafi-onboard-merchants`, `velafi-collect-virtual-accounts`, `velafi-payouts-from-balance`, `velafi-onramp`, `velafi-offramp-payouts`, `velafi-global-payments`, `velafi-crypto-wallet`.
 - `velafi-go-live-check` — runs this skill's self-test as part of the production review.
 
-**Webhooks are not sent in the sandbox.** In the sandbox, poll the query endpoints instead, and test the handler locally with the self-test script. Production is the first place real deliveries arrive.
+**Webhooks are not sent in the sandbox.** In the sandbox, poll the query endpoints instead, and test the handler locally with the self-test in `references/endpoint-self-test.md`. Production is the first place real deliveries arrive.
 
 ## Before you start
 
@@ -103,14 +103,7 @@ A failed delivery is attempted 3 times in total (second about 5–10 minutes aft
 
 ## Verify
 
-1. Run the local self-test against the developer's running handler (needs `pip install cryptography`):
-
-   ```bash
-   python3 scripts/check_webhook_endpoint.py http://localhost:3000/webhooks/velafi \
-     --key-file .velafi-selftest-key.pem --public-key-out .velafi-selftest-pub.txt
-   ```
-
-   It prints a throwaway public key. Configure it **temporarily** as the verification key in the dev environment, then let the script continue. It POSTs signed `FUNDING_WEBHOOK` (DEPOSIT), `ORDER_WEBHOOK` and `CRYPTO_WITHDRAW_WEBHOOK` samples and checks: 2xx + exact acknowledgement, duplicates still acknowledged, tampered or missing signatures not acknowledged, response time well under 60 s. It only targets localhost unless `--allow-remote`, never contacts VelaFi, and exits non-zero on failure. Add the key files to `.gitignore` and restore the real `publicKey` afterwards.
+1. Run the local self-test in `references/endpoint-self-test.md` against the developer's running handler. It signs sample `FUNDING_WEBHOOK` (DEPOSIT), `ORDER_WEBHOOK` and `CRYPTO_WITHDRAW_WEBHOOK` events with a throwaway key configured **temporarily** as the verification key in the dev environment, sends them only to the local handler, and checks: 2xx + exact acknowledgement, duplicates still acknowledged, tampered or missing signatures not acknowledged, response time well under 60 s. It never contacts VelaFi. Keep any key files out of git and restore the real `publicKey` afterwards.
 2. Unit-test the verifier with a known key pair and a body containing non-ASCII characters.
 3. In the sandbox, exercise flows by polling, since no webhooks fire. Deposit simulators: https://docs.velafi.com/docs/sandbox#sandbox-testing-tools.
 4. In production, after the developer approves, register the webhooks and run a low-value transaction end to end.

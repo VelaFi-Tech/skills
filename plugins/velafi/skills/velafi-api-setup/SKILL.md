@@ -16,7 +16,7 @@ It is the entry point for the other VelaFi skills. Build this first, then:
 - The flow skills: `velafi-onboard-merchants`, `velafi-collect-virtual-accounts`, `velafi-payouts-from-balance`, `velafi-onramp`, `velafi-offramp-payouts`, `velafi-global-payments`, `velafi-crypto-wallet`.
 - `velafi-go-live-check` before switching to production.
 
-`scripts/check_token.py` checks the developer's credentials against the sandbox without writing any code.
+`references/credential-check.md` describes a sandbox credential check to run before writing integration code.
 
 ## Before you start
 
@@ -44,13 +44,7 @@ Read from the environment (or the developer's secrets manager), never from sourc
 | `VELAFI_API_KEY` | API key for that environment |
 | `VELAFI_API_SECRET` | API secret for that environment |
 
-Add `.env*` to `.gitignore`. Keep sandbox and production values in separate configs. Check credentials before writing code:
-
-```bash
-VELAFI_API_KEY=... VELAFI_API_SECRET=... python3 scripts/check_token.py
-```
-
-It defaults to the sandbox and refuses `https://api.velafi.com` unless `--production` is passed (only with the developer's approval). It prints a masked token and `expireTime`, or the error code and what it means.
+Add `.env*` to `.gitignore`. Keep sandbox and production values in separate configs. Check the credentials before writing more code: follow `references/credential-check.md`. The check calls only the sandbox token endpoint unless the developer explicitly asks for production, reads the key and secret from the environment, never prints the secret or the full token, and explains any error code.
 
 ### 2. Get a token — `GET /v2/token/generate`
 
@@ -140,7 +134,7 @@ Any endpoint can return `30012` under too many concurrent requests. Docs: https:
 
 ## Verify
 
-1. `python3 scripts/check_token.py` returns `OK: token received` against the sandbox.
+1. The credential check in `references/credential-check.md` returns `OK: token received` against the sandbox.
 2. Call `GET /v2/user/account` with the token; a `200` confirms key, secret, IP whitelist and API access.
 3. Unit-test the signer against a fixed timestamp and secret (HMAC-SHA256 of `timestamp=<ts>`, lowercase hex).
 4. Force a `-1022` (send a bogus token) and check the client refreshes once and does not loop.

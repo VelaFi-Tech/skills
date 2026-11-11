@@ -12,15 +12,15 @@ A review the agent runs over the developer's VelaFi integration before it goes t
 
 It relies on the sibling skills:
 
-- `velafi-api-setup` — token, errors, `clientId` rules; provides `scripts/check_token.py`.
-- `velafi-webhooks` — receiver rules; provides `scripts/check_webhook_endpoint.py`.
+- `velafi-api-setup` — token, errors, `clientId` rules; provides the credential check (`references/credential-check.md`).
+- `velafi-webhooks` — receiver rules; provides the webhook endpoint self-test (`references/endpoint-self-test.md`).
 - The flow skills describe each flow in detail: `velafi-onboard-merchants`, `velafi-collect-virtual-accounts`, `velafi-payouts-from-balance`, `velafi-onramp`, `velafi-offramp-payouts`, `velafi-global-payments`, `velafi-crypto-wallet`.
 
 Source checklist: https://docs.velafi.com/docs/use-cases/go-live-checklist.md. Most production incidents come from three gaps: webhook endpoints that do not acknowledge in the required format, retries without a `clientId`, and no reconciliation job.
 
 ## Hard limits
 
-- **Never call `https://api.velafi.com`.** Do not run `check_token.py --production`, do not run the app, tests or scripts against production config, and do not register, update or delete webhooks. If a test suite or script targets production, skip it and note it in the report.
+- **Never call `https://api.velafi.com`.** Do not run the credential check against production, do not run the app, tests or scripts against production config, and do not register, update or delete webhooks. If a test suite or script targets production, skip it and note it in the report.
 - Never print, copy or commit secrets you find. Report the file and line, and mask the value (first 4 characters + `…`).
 - Do not read secret values out of `.env` files into the conversation; ask the developer to export sandbox credentials in the shell if the token check should run.
 - Do not edit code during the review. Offer fixes at the end.
@@ -103,26 +103,11 @@ For every launching flow, follow `references/flow-trace.md`: take the flow skill
 
 This is what shows whether the integration is correct, not only safe. A flow can pass every checklist item and still send the wrong `paymentId`, read the wrong field, or never record the final status.
 
-### 5. Run the scripts (sandbox and local only)
+### 5. Run the self-checks (sandbox and local only)
 
-Run these from the root of the developer's repository, using the full path to each script inside the installed skills (the `velafi-api-setup` and `velafi-webhooks` folders next to this skill). Keep the test key out of version control:
+1. **Credential check** (only if the developer has **sandbox** credentials in the environment): follow `velafi-api-setup/references/credential-check.md`. Never run it against production for this review. A failure code maps to a config item (IP whitelist, disabled key, API access). If credentials are not available, mark "not run".
 
-1. **Token check** (only if the developer has exported **sandbox** credentials):
-
-   ```bash
-   python3 <skills-dir>/velafi-api-setup/scripts/check_token.py
-   ```
-
-   Never pass `--production` and never set `VELAFI_BASE_URL` to production for this review. A failure code maps to a config item (IP whitelist, disabled key, API access). If credentials are not available, mark "not run".
-
-2. **Webhook self-test** (only if the handler runs locally; needs `pip install cryptography`):
-
-   ```bash
-   python3 <skills-dir>/velafi-webhooks/scripts/check_webhook_endpoint.py http://localhost:<port>/<path> \
-     --key-file .velafi-selftest-key.pem   # add .velafi-selftest-key.pem to .gitignore
-   ```
-
-   The developer configures the printed test public key temporarily in dev. Do not use `--allow-remote` against anything but an environment the developer owns. Record each PASS/FAIL line. Remind the developer to restore the real key and git-ignore the key file.
+2. **Webhook self-test** (only if the handler runs locally): follow `velafi-webhooks/references/endpoint-self-test.md`. The developer configures the throwaway test public key temporarily in dev. Send only to a local endpoint, or to a development environment the developer confirms they own. Record each PASS/WARN/FAIL. Remind the developer to restore the real key and keep any key files out of git.
 
 ### 6. Optional: run each flow in the sandbox
 
@@ -132,7 +117,7 @@ Only if the developer said yes in "Before you start". Follow `references/sandbox
 
 Write the report as one self-contained HTML file, `go-live-report.html`, in the project root:
 
-1. Copy `references/report-template.html` and fill it in, following the comments in the template. Keep its structure and styles. Do not add external fonts, scripts, images or links other than docs.velafi.com.
+1. Build it from `references/report-template.md`: write the HTML template in that file to `go-live-report.html` and fill it in, following its instructions and the comments in the template. Keep its structure and styles. Do not add external fonts, scripts, images or links other than docs.velafi.com.
 2. HTML-escape everything you insert, especially code snippets and error messages. Never insert secrets, tokens, full account numbers or customer personal data; mask them as in the rest of the review.
 3. Give every result a status pill with its word inside: PASS (`pass`), WARN (`warn`), FAIL (`fail`), N/A or NOT RUN (`na`), NOT PROVABLE IN SANDBOX (`np`). Use the verdict box class `fail`, `warn` or `pass` to match the verdict.
 4. Fill the scorecard with the number of items in the Blocking, Warnings, Passed and Not applicable sections, and give each flow trace its own tally.
@@ -152,7 +137,7 @@ End with the offer to fix the FAIL items, one at a time, and the reminder that w
 - Never change the developer's code during the review; never call production; never register or change webhooks. Call the sandbox only in the optional sandbox run, with the developer's OK.
 - Evidence or it is not a PASS.
 - Mask any secret found; recommend rotating any key that was ever committed.
-- Do not claim the integration is ready if any blocking item fails or the scripts could not run and nothing else covers those items.
+- Do not claim the integration is ready if any blocking item fails or the self-checks could not run and nothing else covers those items.
 
 ## Reference links
 
