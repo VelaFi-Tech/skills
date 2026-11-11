@@ -76,6 +76,18 @@ Before it writes any code, the agent asks a few setup questions, such as the cou
 - `check_token.py` calls only `GET /v2/token/generate` and refuses production unless you pass `--production`. `check_webhook_endpoint.py` only sends test events to your own local endpoint and never contacts VelaFi.
 - You stay in control of what gets built. Review generated code and test it in the sandbox before going live. Webhooks are not sent in the sandbox.
 
+## Data and services
+
+The plugin stores no data of its own. When you use it, the agent and scripts contact only these services:
+
+| Service | When | What is sent |
+| --- | --- | --- |
+| VelaFi docs MCP server (`https://docs.velafi.com/mcp`, the plugin's declared connector) | When the agent looks up the docs | Search queries and page paths. The optional `submit_feedback` tool sends the documentation feedback you choose to submit. No credentials. |
+| VelaFi API sandbox (`https://api-test.velafi.com`) | When you ask the agent to test against the sandbox, run `check_token.py`, or run the optional go-live sandbox run | Your own sandbox API key and signed requests, and the test data you create (for example test merchants, virtual accounts, orders and payouts). Responses can include merchant names and emails from your sandbox account. |
+| VelaFi API production (`https://api.velafi.com`) | Only if you explicitly approve a production call | The same as the sandbox, with your production credentials. |
+
+`check_webhook_endpoint.py` sends test events only to your own local webhook endpoint. Data you send to VelaFi is handled under the [VelaFi Privacy Policy](https://help.velafi.com/en-001/articles/privacy-policy-46596314230036) and [Terms and Conditions](https://help.velafi.com/en-001/articles/terms-and-conditions-46592435609492).
+
 ## Feedback
 
 Found something wrong or missing in a skill? Open an issue in this repository. Issues are public: never include API keys, secrets, tokens, merchant IDs or transaction details. For account or integration support, contact VelaFi.
