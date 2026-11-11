@@ -43,7 +43,7 @@ Wait up to 15 minutes for a record to become final. Sandbox behaviour can change
 
 ## How to report it
 
-Add one card per flow to the report's Sandbox run section (`report-template.html`) with: how it was triggered, the IDs (`clientId`, `orderId` or `txId`), the final status and how long it took, the state and ledger change in the developer's system, how a duplicate `clientId` was handled, and the result:
+Add one card per flow to the report's Sandbox run section (`report-template.md`) with: how it was triggered, the IDs (`clientId`, `orderId` or `txId`), the final status and how long it took, the state and ledger change in the developer's system, how a duplicate `clientId` was handled, and the result:
 
 - **PASS**: the flow reached a final status and the developer's system matched it.
 - **FAIL**: the developer's code caused the problem: a request rejected with an error code, a status the code mishandled, a wrong ledger movement, or a duplicate `clientId` that was not handled. Every FAIL here is blocking.

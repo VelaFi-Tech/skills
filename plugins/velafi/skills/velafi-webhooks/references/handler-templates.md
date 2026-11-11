@@ -378,4 +378,4 @@ Configure `velafi.webhook.public-key` from an environment variable or secrets ma
 
 ## Self-test
 
-Run `scripts/check_webhook_endpoint.py` against the running handler. It prints a throwaway public key; set it temporarily as `VELAFI_WEBHOOK_PUBLIC_KEY` (or the Spring property) in the dev environment, restart, and let the script send signed samples.
+Follow `endpoint-self-test.md` against the running handler. Generate the throwaway key pair, set its public key temporarily as `VELAFI_WEBHOOK_PUBLIC_KEY` (or the Spring property) in the dev environment, restart, and send the signed sample events.

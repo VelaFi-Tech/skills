@@ -14,7 +14,7 @@ The checklists confirm that the important pieces exist. The flow trace confirms 
    - **Money.** The developer's ledger is credited or debited at the right status, once, and reversed when the flow says it must be (for example `72` after `60`, `WITHDRAW` status `3` or `4`, `WITHDRAW_ROLLBACK`).
 4. Mark each step PASS, FAIL or WARN with evidence. A step that cannot be found in the code is FAIL if the flow needs it, and N/A if it is optional and the developer confirms they do not use it.
 
-Report one table per flow in the report's Flow trace section (`report-template.html`): step, file:line, what you checked (request, response handling, state and money) and the result, with a tally of FAIL, WARN, PASS and N/A for the flow.
+Report one table per flow in the report's Flow trace section (`report-template.md`): step, file:line, what you checked (request, response handling, state and money) and the result, with a tally of FAIL, WARN, PASS and N/A for the flow.
 
 Any FAIL in a flow trace is a blocking item.
 
